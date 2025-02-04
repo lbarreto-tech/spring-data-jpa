@@ -1,6 +1,8 @@
 package com.bookstore.jpa.models;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -13,6 +15,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -32,6 +36,14 @@ public class BookModel implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "publisher_id")
 	private PublisherModel publisher;
+	
+	@JsonProperty(access = Access.WRITE_ONLY)
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(
+			name = "tb_book_author",
+			joinColumns = @JoinColumn(name = "book_id"),
+			inverseJoinColumns = @JoinColumn(name = "author_id"))
+	private Set<AuthorModel> authors = new HashSet<>();
 		
 
 	public UUID getId() {
@@ -60,6 +72,14 @@ public class BookModel implements Serializable {
 
 	public void setPublisher(PublisherModel publisher) {
 		this.publisher = publisher;
+	}
+
+	public Set<AuthorModel> getAuthors() {
+		return authors;
+	}
+
+	public void setAuthors(Set<AuthorModel> authors) {
+		this.authors = authors;
 	}
 	
 	

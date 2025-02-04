@@ -8,6 +8,7 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -18,6 +19,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -44,6 +46,9 @@ public class BookModel implements Serializable {
 			joinColumns = @JoinColumn(name = "book_id"),
 			inverseJoinColumns = @JoinColumn(name = "author_id"))
 	private Set<AuthorModel> authors = new HashSet<>();
+	
+	@OneToOne(mappedBy = "book", cascade = CascadeType.ALL)
+	private ReviewModel review;
 		
 
 	public UUID getId() {
@@ -80,6 +85,14 @@ public class BookModel implements Serializable {
 
 	public void setAuthors(Set<AuthorModel> authors) {
 		this.authors = authors;
+	}
+
+	public ReviewModel getReview() {
+		return review;
+	}
+
+	public void setReview(ReviewModel review) {
+		this.review = review;
 	}
 	
 	
